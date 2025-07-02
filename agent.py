@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os, time, requests, json, psutil, platform
+
 SERVER = "http://nikadatech.ddns.net"
 AUTH_URL = f"{SERVER}/api/auth/login"
 LOG_URL = f"{SERVER}/api/agent/logs"
@@ -7,8 +8,10 @@ VERSION_FILE_URL = "https://raw.githubusercontent.com/NiKaDa2808/NiKaDa-client-s
 LOCAL_VERSION_FILE = "version.txt"
 UPDATE_SCRIPT = "update_client.sh"
 TOKEN_FILE = "client_token.txt"
+
 EMAIL = os.getenv("CYBERAI_EMAIL")
 PASSWORD = os.getenv("CYBERAI_PASSWORD")
+
 def authenticate(retries=3):
     for attempt in range(retries):
         try:
@@ -21,8 +24,10 @@ def authenticate(retries=3):
             print(f"⚠️ Login error: {e}")
         time.sleep(5)
     return None
+
 def get_token():
     return open(TOKEN_FILE).read().strip() if os.path.exists(TOKEN_FILE) else authenticate()
+
 def check_for_update():
     try:
         local = open(LOCAL_VERSION_FILE).read().strip()
@@ -32,6 +37,7 @@ def check_for_update():
             exit()
     except Exception as e:
         print("Update check failed:", e)
+
 def collect_system_stats():
     return {
         "cpu_percent": psutil.cpu_percent(),
@@ -42,6 +48,7 @@ def collect_system_stats():
         "platform": platform.system(),
         "running_processes": len(psutil.pids())
     }
+
 def send_log():
     token = get_token()
     if not token: return
@@ -55,6 +62,7 @@ def send_log():
         requests.post(LOG_URL, json=data, headers=headers)
     except Exception as e:
         print("Log send error:", e)
+
 if __name__ == "__main__":
     while True:
         check_for_update()
