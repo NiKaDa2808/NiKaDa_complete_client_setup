@@ -14,15 +14,10 @@ else
     exit 1
 fi
 cd "$(dirname "$0")"
-client_folder=$(find . -maxdepth 1 -type d -name "CyberAI-Client*" ! -name "." | head -n 1)
-if [ -z "$client_folder" ]; then
-  echo "❌ Could not find extracted CyberAI-Client folder!"
-  exit 1
-fi
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
 target_dir="CyberAI-Client_$timestamp"
 mkdir "$target_dir"
-mv "$client_folder"/agent.py "$client_folder"/install_client.sh "$client_folder"/update_client.sh "$client_folder"/version.txt "$target_dir"
+cp agent.py install_client.sh update_client.sh version.txt "$target_dir"
 cd "$target_dir"
 read -p "Client Email: " EMAIL
 read -s -p "Password: " PASSWORD
